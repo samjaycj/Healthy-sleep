@@ -313,24 +313,27 @@ class MainApp(MDApp):
         alarm_time=time_remain.total_seconds()
         # set alarm to trigger at the specified time
         print(alarm_time)
-        context = self.mActivity.getApplicationContext()
-        Context = autoclass("android.content.Context")
-        Intent = autoclass("android.content.Intent")
-        PendingIntent = autoclass("android.app.PendingIntent")
-        String = autoclass("java.lang.String")
-        Int = autoclass("java.lang.Integer")
-        intent = Intent()
-        intent.setClass(context, Notify)
-        intent.setAction("org.coffersmart.com.NOTIFY")
-        pending_intent = PendingIntent.getBroadcast(
-        context, 1001, intent, PendingIntent.FLAG_CANCEL_CURRENT
-        )
-        ring_time = time.time_ns() // 1_000_000
-        cast(
-        AlarmManager, context.getSystemService(Context.ALARM_SERVICE)
-        ).setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, ring_time, pending_intent)
-        #self.client.send_message(b'/ping', [alarm_time])
-        #self.alarm_event=Clock.schedule_once(self.on_alarm, alarm_time)
+        if platform == "android":
+            self.service = autoclass("coffersmart.com.healthysleep.ServiceHealthysleep")
+            mActivity = autoclass("org.kivy.android.PythonActivity").mActivity
+            context = mActivity.getApplicationContext()
+            Context = autoclass("android.content.Context")
+            Intent = autoclass("android.content.Intent")
+            PendingIntent = autoclass("android.app.PendingIntent")
+            String = autoclass("java.lang.String")
+            Int = autoclass("java.lang.Integer")
+            intent = Intent()
+            intent.setClass(context, Notify)
+            intent.setAction("org.coffersmart.com.NOTIFY")
+            pending_intent = PendingIntent.getBroadcast(
+            context, 1001, intent, PendingIntent.FLAG_CANCEL_CURRENT
+            )
+            ring_time = time.time_ns() // 1_000_000
+            cast(
+            AlarmManager, context.getSystemService(Context.ALARM_SERVICE)
+            ).setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, ring_time, pending_intent)
+            #self.client.send_message(b'/ping', [alarm_time])
+            #self.alarm_event=Clock.schedule_once(self.on_alarm, alarm_time)
 
     def stop_service(self):
         if self.service:
