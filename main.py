@@ -11,7 +11,7 @@ from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.expansionpanel import MDExpansionPanel, MDExpansionPanelOneLine
 from kivy.uix.settings import SettingsWithSidebar
 from jsonsettings import settings_json
-#from android import AndroidService, start_service
+import time
 from kivy.clock import Clock
 from kivy.core.audio import SoundLoader
 from kivymd.uix.dialog import MDDialog
@@ -19,7 +19,7 @@ from kivymd.uix.button import MDFlatButton
 import os
 from oscpy.client import OSCClient
 from oscpy.server import OSCThreadServer
-from jnius import autoclass
+from jnius import autoclass, cast
 from kivy import platform
 
 class Content(MDBoxLayout):
@@ -103,7 +103,7 @@ class MainApp(MDApp):
 
     def on_start(self):
 
-        self.start_service()
+        #self.start_service()
 
         self.root.ids.box.add_widget(
             MDExpansionPanel(
@@ -281,9 +281,9 @@ class MainApp(MDApp):
         if platform == "android":
             self.service = autoclass("coffersmart.com.healthysleep.ServiceHealthysleep")
             self.mActivity = autoclass("org.kivy.android.PythonActivity").mActivity
-            self.service.start(self.mActivity, "")
-            return self.service
-            #return mservice
+           # self.service.start(self.mActivity, "")
+            #return self.service
+
         elif platform in ('linux', 'linux2', 'macos', 'win'):
             from runpy import run_path
             from threading import Thread
@@ -313,7 +313,23 @@ class MainApp(MDApp):
         alarm_time=time_remain.total_seconds()
         # set alarm to trigger at the specified time
         print(alarm_time)
-        self.client.send_message(b'/ping', [alarm_time])
+        context = self.mActivity.getApplicationContext()
+        Context = autoclass("android.content.Context")
+        Intent = autoclass("android.content.Intent")
+        PendingIntent = autoclass("android.app.PendingIntent")
+        String = autoclass("java.lang.String")
+        Int = autoclass("java.lang.Integer")
+        intent = Intent()
+        intent.setClass(context, Notify)
+        intent.setAction("org.coffersmart.com.NOTIFY")
+        pending_intent = PendingIntent.getBroadcast(
+        context, 1001, intent, PendingIntent.FLAG_CANCEL_CURRENT
+        )
+        ring_time = time.time_ns() // 1_000_000
+        cast(
+        AlarmManager, context.getSystemService(Context.ALARM_SERVICE)
+        ).setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, ring_time, pending_intent)
+        #self.client.send_message(b'/ping', [alarm_time])
         #self.alarm_event=Clock.schedule_once(self.on_alarm, alarm_time)
 
     def stop_service(self):

@@ -13,7 +13,6 @@ import android.os.Build;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.media.AudioAttributes;
-import org.org.healthysleep.R;
 import java.lang.Math;
 
 public class Notify extends BroadcastReceiver{
@@ -58,7 +57,6 @@ public class Notify extends BroadcastReceiver{
          int notification_id = (int)(Math.random()*(8000-1+1)+1);
 
          NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "NOTIFICATION")
-                 .setSmallIcon(R.drawable.ic_launcher)
                  .setContentTitle("Your notification title here")
                  .setContentText("Your notification description here")
                  .setTicker("New Notification")
