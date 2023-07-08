@@ -1,0 +1,332 @@
+<DrawerClickableItem@MDNavigationDrawerItem>
+    #focus_color: "#595959"
+    #unfocus_color: "#e9dff7"
+    text_color: "#bfbfbf"
+    icon_color: "#bfbfbf"
+    ripple_color: "#661400"
+    selected_color: "#ff471a"
+    font_style: "Caption"
+
+<DrawerLabelItem@MDNavigationDrawerItem>
+    focus_color: None
+    #bg_color: "#e9dff7"
+    #unfocus_color: "#e9dff7"
+    text_color: "#bfbfbf"
+    icon_color: "#bfbfbf"
+    selected_color: "#bfbfbf"
+    _no_ripple_effect: True
+    font_style: "Caption"
+
+<Content>
+    orientation: 'vertical'
+    adaptive_height: True
+    MDTextField:
+        hint_text: "Please Enter Comments"
+        multiline: True
+        mode: "rectangle"
+        size_hint: .7,None
+        pos_hint: {"center_x":.5} 
+    MDLabel:
+        size_hint: .7, .12
+    MDRectangleFlatIconButton:
+        text: "Send" 
+        pos_hint: {"center_x":.5}         
+
+
+<ContentNavigationDrawer>
+    MDNavigationDrawerMenu:
+        MDNavigationDrawerHeader:
+            text: "Healthy Sleep"
+            text_color: "#4a4939"
+            spacing: "4dp"
+            padding: "12dp", 0, 0, "56dp"
+        MDNavigationDrawerLabel:
+            text: "Set Alarms"
+        DrawerClickableItem:
+            icon: "sleep-off"
+            text: "Wakeup"
+            on_release:
+                root.screen_manager.transition.direction = "left"
+                root.screen_manager.current = "wake_alarm"
+                root.nav_drawer.set_state("close")
+        DrawerClickableItem:
+            icon: "sleep"
+            text: "Sleep"
+            on_release:
+                root.screen_manager.current = "sleep_alarm"
+                root.nav_drawer.set_state("close")
+        DrawerClickableItem:
+            icon: "timer-settings"
+            text: "Settings"
+            on_release:
+                app.open_settings()
+        MDNavigationDrawerDivider:
+        MDNavigationDrawerLabel:
+            text: "Help & Feedback"        
+        DrawerClickableItem:
+            #icon: "information"
+            text: "About"
+            on_release:
+                root.screen_manager.current = "info"
+                root.nav_drawer.set_state("close")
+        DrawerClickableItem:
+            #icon: "information"
+            text: "Privacy Policy"
+            on_release:
+                root.screen_manager.current = "privacy"
+                root.nav_drawer.set_state("close")
+        DrawerClickableItem:
+            #icon: "information"
+            text: "Send Feedback"
+            on_release:
+                root.screen_manager.current = "feedback"
+                root.nav_drawer.set_state("close")
+        DrawerClickableItem:
+            #icon: None
+            text: "Contact Support"
+            on_release:
+                root.screen_manager.current = "contact"
+                root.nav_drawer.set_state("close")
+
+MDScreen:
+    id: topscreen
+    MDTopAppBar:
+        id: toolbar
+        pos_hint: {"top": 1}
+        title: "Healthy Sleep"
+        left_action_items: [["menu", lambda x: root.ids.nav_drawer.set_state('toggle')]]
+
+    MDNavigationLayout:
+        #x: toolbar.height
+        MDScreenManager:
+            id: screen_manager
+            MDScreen:
+                name:"wake_alarm"
+                BoxLayout:
+                    orientation: 'vertical'
+                    MDLabel:
+                        id: labeltest
+                        size_hint: .5, .15
+                        pos_hint: {"center_x": .5}
+                    MDLabel:
+                        text:"Set Wakeup Alarm"
+                        size_hint: .5, .08
+                        pos_hint: {"center_x": .5}
+                    MDFloatLayout:
+                        size_hint: .7, .07
+                        pos_hint: {"center_x": .5}
+                        MDTextField:
+                            id: stime
+                            readonly: True
+                            hint_text: "Sleep Time :"
+                            pos_hint: {'center_x': 0.43, 'center_y': 0.43}
+                            font_size: '12sp'
+                            cursor_width: '2sp'                                            
+                        MDIconButton:
+                            icon: "clock"
+                            pos_hint: {"center_y": .43}
+                            pos: stime.x + stime.width - self.width + dp(8), 0
+                            on_release:
+                                app.show_time_picker()
+                    MDScrollView:
+                        MDList:
+                            id: alarm_list_w
+            MDScreen:
+                name:"sleep_alarm"
+                BoxLayout:
+                    orientation: 'vertical'
+                    MDLabel:
+                        size_hint: .5, .15
+                        pos_hint: {"center_x": .5}
+                    MDLabel:
+                        text:"Set Sleep Alarm"
+                        size_hint: .5, .08                        
+                        pos_hint: {"center_x": .5}
+                    MDFloatLayout:
+                        size_hint: .7, .07
+                        pos_hint: {"center_x": .5, "center_y": .7}
+                        MDTextField:
+                            id: wtime
+                            readonly: True
+                            hint_text: "Wakeup Time :"
+                            pos_hint: {'center_x': 0.43, 'center_y': 0.43}
+                            font_size: '12sp'
+                            cursor_width: '2sp'                                            
+                        MDIconButton:
+                            icon: "clock"
+                            pos_hint: {"center_y": .43}
+                            pos: wtime.x + stime.width - self.width + dp(8), 0
+                            on_release:
+                                app.show_time_picker_s()
+                    MDScrollView:
+                        MDList:
+                            id: alarm_list_s
+            MDScreen:
+                name:"settings"
+                BoxLayout:
+                    orientation: 'vertical'
+                    MDLabel:
+                        size_hint: .5, .2
+                        pos_hint: {"center_x": .5}
+                    MDLabel:
+                        text:"Settings"
+                        halign: "center"
+                        size_hint: 1, .12                        
+                        pos_hint: {"center_x": .5}
+                    MDFloatLayout:
+                        size_hint: .7, .17
+                        pos_hint: {"center_x": .5, "center_y": .7}
+                        MDTextField:
+                            id: ftime
+                            readonly: True
+                            text: "24H"
+                            hint_text: "Time Format"
+                            pos_hint: {'center_x': 0.43, 'center_y': 0.43}
+                            font_size: '12sp'
+                            cursor_width: '2sp'                                            
+                        MDIconButton:
+                            id: ftimedrop
+                            icon: "arrow-down-drop-circle-outline"
+                            pos_hint: {"center_y": .43}
+                            pos: ftime.x + ftime.width - self.width + dp(8), 0
+                            on_release:
+                                app.pick_time_format()
+                    MDFloatLayout:
+                        size_hint: .7, .17
+                        pos_hint: {"center_x": .5, "center_y": .6}
+                        MDTextField:
+                            id: fstime
+                            text: "15"
+                            hint_text: "Time to fall asleep (Minutes)"
+                            pos_hint: {'center_x': 0.43, 'center_y': 0.43}
+                            font_size: '12sp'
+                            cursor_width: '2sp'  
+                            input_filter: 'int'       
+                            max_text_length: 2
+                    MDFloatLayout:
+                        pos_hint: {"center_x": .5, "center_y": .6}
+                        MDRectangleFlatIconButton:
+                            text: "Save"
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}                                    
+            MDScreen:
+                name:"info"
+                BoxLayout:
+                    orientation: 'vertical'
+                    MDLabel:
+                        size_hint: .5, .2
+                        pos_hint: {"center_x": .5}
+                    MDLabel:
+                        text:"About Healthy Sleep"
+                        halign: "center"
+                        size_hint: 1, .12                        
+                        pos_hint: {"center_x": .5}
+                    MDScrollView:
+                        GridLayout:
+                            cols:1
+                            size_hint_y: None
+                            height: self.minimum_height
+                            MDLabel:
+                                text:"This program brings you convinience in selecting how much you need to sleep and what time you need to getup in order to maintain a healthy and effective sleep. \n A healthy sleep cycle consists of 5 stages: \n 1) N1 (light sleep) \n 2) N2 (deeper sleep) \n 3) N3 (deepest sleep) \n 4) REM (rapid eye movement) sleep \n 5) N1 again. \n This cycle typically repeats 4-5 times per night, with longer periods of N3 and REM occurring later in the night. A healthy sleep cycle is important for physical and mental restoration, learning and memory consolidation, and emotional regulation. The recommended amount of sleep is 7-9 hours per night for adults \n \n \n"
+                                font_style:"Body2"
+                                halign: "justify"
+                                padding_x: 25
+                                size_hint_y: None
+                                height: self.texture_size[1]
+                                text_size: self.width, None
+                            MDLabel:
+                                text:" \n  \nThe calculations and opinions provided from this program is based on 3rd party researches and publications. Given below are some of the sources for more information"
+                                font_style:"Caption"
+                                halign: "justify"
+                                padding_x: 25
+                                size_hint_y: None
+                                height: self.texture_size[1]
+                                text_size: self.width, None
+                            MDLabel:
+            MDScreen:
+                name:"privacy"
+                BoxLayout:
+                    orientation: 'vertical'
+                    MDLabel:
+                        size_hint: .5, .2
+                        pos_hint: {"center_x": .5}
+                    MDLabel:
+                        text:"Privacy Policy for Healthy Sleep"
+                        halign: "center"
+                        size_hint: 1, .12                        
+                        pos_hint: {"center_x": .5}
+                    MDScrollView:
+                        GridLayout:
+                            cols:1
+                            size_hint_y: None
+                            height: self.minimum_height
+                            MDLabel:
+                                markup: True
+                                text:"[b]Introduction:[/b] \n We at Healthy Sleep are committed to protecting the privacy of our users. Our app does not collect, store, or share any personal data from its users.\n\n [b]Data Collection and Use:[/b] \n Our app does not collect any personal information from its users, such as names, addresses, email addresses, or phone numbers. The app only collects and uses non-personal, aggregated data for the purpose of improving app performance and functionality. \n\n [b]Third-Party Services:[/b] \n Our app does not use any third-party services that collect personal data from its users. We only use services that are necessary for the functioning of the app and do not compromise the privacy of our users. \n\n [b]Data Security:[/b] \n We take the security of our users' data very seriously. Our app uses industry-standard security measures to protect against unauthorized access to, or alteration, disclosure, or destruction of data. \n\n [b]Changes to this Privacy Policy:[/b] \n We may update this Privacy Policy from time to time to reflect changes in our app or to comply with legal requirements. We will notify our users of any changes through the app or through other means. \n\n [b]Contact Us:[/b] \n If you have any questions or concerns about our Privacy Policy, please contact us at healthysleep@cofersmart.com"
+                                font_style:"Body2"
+                                halign: "justify"
+                                padding_x: 25
+                                size_hint_y: None
+                                height: self.texture_size[1]
+                                text_size: self.width, None
+                            MDLabel:
+            MDScreen:
+                name:"feedback"
+                BoxLayout:
+                    orientation: 'vertical'
+                    MDLabel:
+                        size_hint: .5, .2
+                        pos_hint: {"center_x": .5}
+                    MDLabel:
+                        text:"Feedback for Healthy Sleep"
+                        halign: "center"
+                        size_hint: 1, .12                        
+                        pos_hint: {"center_x": .5}
+                    MDScrollView:
+                        MDGridLayout:
+                            id: box
+                            cols: 1
+                            adaptive_height: True
+
+            MDScreen:
+                name:"contact"
+                BoxLayout:
+                    orientation: 'vertical'
+                    MDLabel:
+                        size_hint: .5, .17
+                        pos_hint: {"center_x": .5}
+                    MDLabel:
+                        text:"Contact Healthy Sleep Support"
+                        halign: "center"
+                        size_hint: 1, .12                        
+                        pos_hint: {"center_x": .5}
+                    MDTextField:
+                        id: contsub
+                        hint_text: "Summery of the issue"
+                        pos_hint: {'center_x': 0.5}
+                        font_size: '12sp'
+                        cursor_width: '2sp'  
+                        mode: "rectangle"
+                        size_hint: .8, .09
+                    MDTextField:
+                        id: contdet
+                        hint_text: "Issue Description"
+                        pos_hint: {'center_x': 0.5}
+                        font_size: '12sp'
+                        cursor_width: '2sp'  
+                        multiline: True
+                        mode: "rectangle"
+                        size_hint: .8, .17
+                    MDLabel:
+                        size_hint: .7, .12
+                    MDRectangleFlatIconButton:
+                        text: "Send"          
+                        pos_hint: {'center_x': 0.5}
+                        on_release:
+                            app.send_mail()
+                    MDLabel:  
+                        size_hint: .7, .32               
+        MDNavigationDrawer:
+            id: nav_drawer
+            ContentNavigationDrawer:
+                screen_manager: screen_manager
+                nav_drawer: nav_drawer
