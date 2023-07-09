@@ -10,8 +10,8 @@ Intent = autoclass("android.content.Intent")
 PendingIntent = autoclass("android.app.PendingIntent")
 String = autoclass("java.lang.String")
 Int = autoclass("java.lang.Integer")
-
-
+AlarmManager = autoclass('android.app.AlarmManager') 
+Notify= autoclass('coffersmart.com.healthysleep.Notify')
 intent = Intent()
 intent.setClass(context, Notify)
 # Here change the "org.org.test" to whatever package domain you have set.
