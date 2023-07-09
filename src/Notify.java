@@ -1,4 +1,4 @@
-package org.org.healthysleep;
+package coffersmart.com.healthysleep;
 //The package name of your android app
 
 import android.content.BroadcastReceiver;
@@ -14,6 +14,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.media.AudioAttributes;
 import java.lang.Math;
+import coffersmart.com.healthysleep.R;
 
 public class Notify extends BroadcastReceiver{
 
@@ -57,6 +58,7 @@ public class Notify extends BroadcastReceiver{
          int notification_id = (int)(Math.random()*(8000-1+1)+1);
 
          NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "NOTIFICATION")
+                 .setSmallIcon(R.drawable.ic_launcher)
                  .setContentTitle("Your notification title here")
                  .setContentText("Your notification description here")
                  .setTicker("New Notification")

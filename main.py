@@ -305,14 +305,15 @@ class MainApp(MDApp):
             aval=self.alm_time_s[sindex]
         else:
             aval=self.alm_time_w[sindex]
-        faval=datetime.strptime(aval,self.dtfval[0])
+        faval=datetime.strptime(aval,self.dtfval[0]).timestamp()*1000
         curr_time=datetime.now()
         #print(faval)
         #print(curr_time)
-        time_remain=faval-curr_time
-        alarm_time=time_remain.total_seconds()
+        #time_remain=faval-curr_time
+        #alarm_time=time_remain.total_seconds()
+        ring_time = faval#time.time_ns() // 1_000_000
         # set alarm to trigger at the specified time
-        print(alarm_time)
+        #print(alarm_time)
         if platform == "android":
             self.service = autoclass("coffersmart.com.healthysleep.ServiceHealthysleep")
             mActivity = autoclass("org.kivy.android.PythonActivity").mActivity
@@ -330,7 +331,8 @@ class MainApp(MDApp):
             pending_intent = PendingIntent.getBroadcast(
             context, 1001, intent, PendingIntent.FLAG_CANCEL_CURRENT
             )
-            ring_time = time.time_ns() // 1_000_000
+            ring_time = datetime(faval).timestamp()#time.time_ns() // 1_000_000
+            print (ring_time)
             cast(AlarmManager, context.getSystemService(Context.ALARM_SERVICE)
             ).setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, ring_time, pending_intent)
             #self.client.send_message(b'/ping', [alarm_time])
