@@ -322,6 +322,8 @@ class MainApp(MDApp):
             PendingIntent = autoclass("android.app.PendingIntent")
             String = autoclass("java.lang.String")
             Int = autoclass("java.lang.Integer")
+            AlarmManager = autoclass('android.app.AlarmManager')
+            Notify= autoclass('coffersmart.com.healthysleep.Notify')
             intent = Intent()
             intent.setClass(context, Notify)
             intent.setAction("org.coffersmart.com.NOTIFY")
@@ -329,8 +331,7 @@ class MainApp(MDApp):
             context, 1001, intent, PendingIntent.FLAG_CANCEL_CURRENT
             )
             ring_time = time.time_ns() // 1_000_000
-            cast(
-            AlarmManager, context.getSystemService(Context.ALARM_SERVICE)
+            cast(AlarmManager, context.getSystemService(Context.ALARM_SERVICE)
             ).setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, ring_time, pending_intent)
             #self.client.send_message(b'/ping', [alarm_time])
             #self.alarm_event=Clock.schedule_once(self.on_alarm, alarm_time)
