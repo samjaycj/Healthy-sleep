@@ -14,11 +14,9 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.media.AudioAttributes;
 import java.lang.Math;
+import android.media.MediaPlayer;
 import coffersmart.com.healthysleep.R;
-import android.media.Ringtone;
-import android.provider.CalendarContract.Reminders;
-import android.content.ComponentName;
-import android.app.Activity;
+
 
 public class Notify extends BroadcastReceiver{
 
@@ -29,7 +27,7 @@ public class Notify extends BroadcastReceiver{
     this.createNotificationChannel(context);
     // function to create the notification
     this.sendNotification(context, intent);
-    this.triggerAlarm(context);
+    this.triggerAlarm(context, intent);
   }
 
   private void createNotificationChannel(Context context) {
@@ -77,9 +75,8 @@ public class Notify extends BroadcastReceiver{
 
     private void triggerAlarm(Context context, Intent intent) {
         Uri alert = RingtoneManager.getActualDefaultRingtoneUri(RingtoneManager.TYPE_ALARM);
-        mMediaPlayer.setDataSource(this, alert);
+        MediaPlayer mMediaPlayer = MediaPlayer.create(this, alert);
         mMediaPlayer.setLooping(true);
-        mMediaPlayer.prepare();
         mMediaPlayer.start();
     }
 
