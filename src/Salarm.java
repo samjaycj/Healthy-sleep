@@ -5,7 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.Context;
 import android.media.MediaPlayer;
-
+import coffersmart.com.healthysleep.R;
 
 public class Salarm extends BroadcastReceiver{
   MediaPlayer mediaPlayer;

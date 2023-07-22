@@ -61,8 +61,8 @@ public class Notify extends BroadcastReceiver{
          Uri uri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
          //create an unique notification id. Here it is done using random numbers
          int notification_id = (int)(Math.random()*(8000-1+1)+1);
-         sintent=Intent.setClass(context, Salarm);
-         pendingIntent = PendingIntent.getBroadcast(
+         Intent sintent=Intent.setClass(context, Salarm);
+         PendingIntent pendingIntent = PendingIntent.getBroadcast(
           context,
           10,
           sintent,
