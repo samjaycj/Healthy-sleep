@@ -15,6 +15,10 @@ import android.net.Uri;
 import android.media.AudioAttributes;
 import java.lang.Math;
 import coffersmart.com.healthysleep.R;
+import android.media.Ringtone;
+import android.provider.CalendarContract.Reminders;
+import android.content.ComponentName;
+import android.app.Activity;
 
 public class Notify extends BroadcastReceiver{
 
@@ -71,7 +75,7 @@ public class Notify extends BroadcastReceiver{
          notificationManager.notify(notification_id,builder.build());
      }
 
-    private void triggerAlarm(Context context) {
+    private void triggerAlarm(Context context, Intent intent) {
         //this will update the UI with message
         Reminder inst = Reminder.instance();
         inst.setAlarmText("Healthy Alarm");
