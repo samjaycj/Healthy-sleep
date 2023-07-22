@@ -21,7 +21,8 @@ import coffersmart.com.healthysleep.R;
 
 
 public class Notify extends BroadcastReceiver{
- static MediaPlayer mMediaPlayer;
+  static MediaPlayer mMediaPlayer;
+  static int notification_id = (int)(Math.random()*(8000-1+1)+1);
   // This function is run when the BroadcastReceiver is fired
   @Override
   public void onReceive(Context context, Intent intent) {
@@ -37,7 +38,6 @@ public class Notify extends BroadcastReceiver{
         //checks if android version is equal to or above nougat else doesnt do anything
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
             AudioAttributes att = new AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_NOTIFICATION)
                     .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
@@ -60,7 +60,6 @@ public class Notify extends BroadcastReceiver{
     private void sendNotification(Context context, Intent intent) {
          Uri uri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
          //create an unique notification id. Here it is done using random numbers
-         int notification_id = (int)(Math.random()*(8000-1+1)+1);
          Intent sintent = new Intent(context, Salarm.class);
          PendingIntent pendingIntent = PendingIntent.getBroadcast(
           context,
@@ -97,9 +96,11 @@ public class Notify extends BroadcastReceiver{
     }
 
     public static void stopAlarm(){
-      if (mMediaPlayer != null)
+      if(mMediaPlayer.isPlaying()){
         mMediaPlayer.stop();
         mMediaPlayer.release();
+        cancel(notification_id);
     }
+  }
 
 }
