@@ -12,7 +12,6 @@ public class Salarm extends BroadcastReceiver{
   // This function is run when the BroadcastReceiver is fired
    @Override
    public void onReceive(Context context, Intent sintent) {
-       super.onReceive();
        if (mediaPlayer != null) mediaPlayer.release();
    }
 
