@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.Context;
 import android.media.MediaPlayer;
+import coffersmart.com.healthysleep.Notify;
 import coffersmart.com.healthysleep.R;
 
 public class Salarm extends BroadcastReceiver{
@@ -12,7 +13,7 @@ public class Salarm extends BroadcastReceiver{
   // This function is run when the BroadcastReceiver is fired
    @Override
    public void onReceive(Context context, Intent sintent) {
-       if (mediaPlayer != null) mediaPlayer.release();
+    Notify.stopAlarm(context,sintent);
    }
 
 }
