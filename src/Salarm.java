@@ -1,3 +1,12 @@
+package coffersmart.com.healthysleep;
+//The package name of your android app
+
+import android.content.BroadcastReceiver;
+import android.content.Intent;
+import android.content.Context;
+import android.media.MediaPlayer;
+
+
 public class Salarm extends BroadcastReceiver{
   MediaPlayer mediaPlayer;
   // This function is run when the BroadcastReceiver is fired
