@@ -336,15 +336,16 @@ class MainApp(MDApp):
             intent.setClass(context, Notify)
             intent.setAction("org.coffersmart.com.NOTIFY")
             pending_intent = PendingIntent.getBroadcast(
-            context, AlarmManagerId, intent, PendingIntent.FLAG_CANCEL_CURRENT
+            context, AlarmManagerId, intent, PendingIntent.FLAG_UPDATE_CURRENT
             )
             if amethod=='create':
                 ring_time = faval#time.time_ns() // 1_000_000
                 print (ring_time)
-                cast(AlarmManager, context.getSystemService(Context.ALARM_SERVICE)
+                am=cast(AlarmManager, context.getSystemService(Context.ALARM_SERVICE)
                 ).setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, ring_time, pending_intent)
             else:
-                AlarmManager.cancel(pending_intent)
+                am=context.getSystemService(Context.ALARM_SERVICE)
+                am.cancel(pending_intent)
             #self.client.send_message(b'/ping', [alarm_time])
             #self.alarm_event=Clock.schedule_once(self.on_alarm, alarm_time)
 
