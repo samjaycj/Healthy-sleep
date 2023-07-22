@@ -97,8 +97,9 @@ public class Notify extends BroadcastReceiver{
     }
 
     public static void stopAlarm(){
-      mMediaPlayer.stop();
-      mMediaPlayer.release();
+      if (mMediaPlayer != null)
+        mMediaPlayer.stop();
+        mMediaPlayer.release();
     }
 
 }
