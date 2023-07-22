@@ -76,25 +76,11 @@ public class Notify extends BroadcastReceiver{
      }
 
     private void triggerAlarm(Context context, Intent intent) {
-        //this will update the UI with message
-        Reminder inst = Reminder.instance();
-        inst.setAlarmText("Healthy Alarm");
-
-        //this will sound the alarm tone
-        //this will sound the alarm once, if you wish to
-        //raise alarm in loop continuously then use MediaPlayer and setLooping(true)
-        Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        if (alarmUri == null) {
-            alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-        }
-        Ringtone ringtone = RingtoneManager.getRingtone(context, alarmUri);
-        ringtone.play();
-
-        //this will send a notification message
-        ComponentName comp = new ComponentName(context.getPackageName(),
-                AlarmService.class.getName());
-        startWakefulService(context, (intent.setComponent(comp)));
-        setResultCode(Activity.RESULT_OK);
+        Uri alert = RingtoneManager.getActualDefaultRingtoneUri(RingtoneManager.TYPE_ALARM);
+        mMediaPlayer.setDataSource(this, alert);
+        mMediaPlayer.setLooping(true);
+        mMediaPlayer.prepare();
+        mMediaPlayer.start();
     }
 
 }
