@@ -81,7 +81,7 @@ public class Notify extends BroadcastReceiver{
          notificationManager.notify(notification_id,builder.build());
      }
 
-    private void triggerAlarm(Context context, Intent intent) {
+    public void triggerAlarm(Context context, Intent intent) {
         Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         MediaPlayer mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setAudioAttributes(new AudioAttributes.Builder()
@@ -94,6 +94,11 @@ public class Notify extends BroadcastReceiver{
       }
         mMediaPlayer.setLooping(true);
         mMediaPlayer.start();
+    }
+
+    public void stopAlarm(Context context, Intent intent){
+      mMediaPlayer.stop();
+      mMediaPlayer.release();
     }
 
 }
