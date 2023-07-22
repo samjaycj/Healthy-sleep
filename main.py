@@ -168,12 +168,18 @@ class MainApp(MDApp):
         sindex = self.root.ids.alarm_list_w.children.index(listdata)
         if self.icon_list_w[sindex].icon == "bell":
             self.icon_list_w[sindex].icon = "bell-outline"
+            self.onCreate_delete(sindex,'w','delete')
             del self.alm_time_w[sindex]
         else:
+            for i in range(7):
+                if self.icon_list_w[i].icon =="bell":
+                    self.icon_list_w[i].icon = "bell-outline"
+                    self.onCreate_delete(i,'w','delete')
+                    del self.alm_time_w[i]
             self.icon_list_w[sindex].icon ="bell"
             sval=self.listitem_list_w[sindex].text
             self.alm_time_w[sindex]=sval
-            self.onCreate(sindex,'w')
+            self.onCreate_delete(sindex,'w','create')
 
     def show_time_picker(self):
         time_dialog = MDTimePicker()
@@ -219,12 +225,18 @@ class MainApp(MDApp):
         sindex = self.root.ids.alarm_list_s.children.index(listdata)
         if self.icon_list_s[sindex].icon == "bell":
             self.icon_list_s[sindex].icon = "bell-outline"
+            self.onCreate_delete(sindex,'s','delete')
             del self.alm_time_s[sindex]
         else:
+            for i in range(7):
+                if self.icon_list_s[i].icon =="bell":
+                    self.icon_list_s[i].icon = "bell-outline"
+                    self.onCreate_delete(i,'s','delete')
+                    del self.alm_time_s[i]
             self.icon_list_s[sindex].icon ="bell"
             sval=self.listitem_list_s[sindex].text
             self.alm_time_s[sindex]=sval
-            self.onCreate(sindex,'s')
+            self.onCreate_delete(sindex,'s','create')
 
     def show_time_picker_s(self):
         time_dialog = MDTimePicker()
@@ -299,21 +311,16 @@ class MainApp(MDApp):
                 "service start not implemented on this platform"
             )
         
-    def onCreate(self,sindex,atype):
+    def onCreate_delete(self,sindex,atype,amethod):
         # initialize alarm time
         if atype=='s':
             aval=self.alm_time_s[sindex]
+            AlarmManagerId=1001
         else:
             aval=self.alm_time_w[sindex]
+            AlarmManagerId=1002
         faval=datetime.strptime(aval,self.dtfval[0]).timestamp()*1000
         curr_time=datetime.now()
-        #print(faval)
-        #print(curr_time)
-        #time_remain=faval-curr_time
-        #alarm_time=time_remain.total_seconds()
-        #ring_time = faval#time.time_ns() // 1_000_000
-        # set alarm to trigger at the specified time
-        #print(alarm_time)
         if platform == "android":
             self.service = autoclass("coffersmart.com.healthysleep.ServiceHealthysleep")
             mActivity = autoclass("org.kivy.android.PythonActivity").mActivity
@@ -329,32 +336,17 @@ class MainApp(MDApp):
             intent.setClass(context, Notify)
             intent.setAction("org.coffersmart.com.NOTIFY")
             pending_intent = PendingIntent.getBroadcast(
-            context, 1001, intent, PendingIntent.FLAG_CANCEL_CURRENT
+            context, AlarmManagerId, intent, PendingIntent.FLAG_CANCEL_CURRENT
             )
-            ring_time = faval#time.time_ns() // 1_000_000
-            print (ring_time)
-            cast(AlarmManager, context.getSystemService(Context.ALARM_SERVICE)
-            ).setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, ring_time, pending_intent)
+            if amethod=='create':
+                ring_time = faval#time.time_ns() // 1_000_000
+                print (ring_time)
+                cast(AlarmManager, context.getSystemService(Context.ALARM_SERVICE)
+                ).setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, ring_time, pending_intent)
+            else:
+                AlarmManager.cancel(pending_intent)
             #self.client.send_message(b'/ping', [alarm_time])
             #self.alarm_event=Clock.schedule_once(self.on_alarm, alarm_time)
-
-    def stop_service(self):
-        if self.service:
-            if platform == "android":
-                self.service.stop(self.mActivity)
-                self.service=None
-            elif platform in ('linux', 'linux2', 'macos', 'win'):
-                # The below method will not work. 
-                # Need to develop a method like 
-                # https://www.oreilly.com/library/view/python-cookbook/0596001673/ch06s03.html
-                self.service.stop()
-                self.service=None
-            else:
-            	raise NotImplementedError(
-                	"service start not implemented on this platform"
-            	)
-        
-
 
 class ContentNavigationDrawer(MDScrollView):
     screen_manager = ObjectProperty()
