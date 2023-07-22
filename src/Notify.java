@@ -75,9 +75,10 @@ public class Notify extends BroadcastReceiver{
 
     private void triggerAlarm(Context context, Intent intent) {
         Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        MediaPlayer mMediaPlayer = MediaPlayer.create(context, alert);
+        MediaPlayer mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setAudioAttributes(new AudioAttributes.Builder()
                              .setUsage(AudioAttributes.USAGE_ALARM).build());
+        mMediaPlayer.setDataSource(context, alert);
         mMediaPlayer.prepare();
         mMediaPlayer.setLooping(true);
         mMediaPlayer.start();
