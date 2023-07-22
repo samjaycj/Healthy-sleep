@@ -21,7 +21,7 @@ import coffersmart.com.healthysleep.R;
 
 
 public class Notify extends BroadcastReceiver{
-
+ static MediaPlayer mMediaPlayer;
   // This function is run when the BroadcastReceiver is fired
   @Override
   public void onReceive(Context context, Intent intent) {
@@ -83,7 +83,7 @@ public class Notify extends BroadcastReceiver{
 
     public void triggerAlarm(Context context, Intent intent) {
         Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        MediaPlayer mMediaPlayer = new MediaPlayer();
+        mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setAudioAttributes(new AudioAttributes.Builder()
                              .setUsage(AudioAttributes.USAGE_ALARM).build());
        try {
@@ -96,7 +96,7 @@ public class Notify extends BroadcastReceiver{
         mMediaPlayer.start();
     }
 
-    public void stopAlarm(Context context, Intent intent){
+    public static void stopAlarm(){
       mMediaPlayer.stop();
       mMediaPlayer.release();
     }

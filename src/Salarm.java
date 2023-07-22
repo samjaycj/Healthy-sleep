@@ -9,11 +9,10 @@ import coffersmart.com.healthysleep.Notify;
 import coffersmart.com.healthysleep.R;
 
 public class Salarm extends BroadcastReceiver{
-  MediaPlayer mediaPlayer;
   // This function is run when the BroadcastReceiver is fired
    @Override
    public void onReceive(Context context, Intent sintent) {
-    Notify.stopAlarm(context,sintent);
+    Notify.stopAlarm();
    }
 
 }
