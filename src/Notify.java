@@ -95,11 +95,12 @@ public class Notify extends BroadcastReceiver{
         mMediaPlayer.start();
     }
 
-    public static void stopAlarm(){
+    public static void stopAlarm(Context context){
       if(mMediaPlayer.isPlaying()){
         mMediaPlayer.stop();
         mMediaPlayer.release();
-        cancel(notification_id);
+        NotificationManagerCompat mnotificationManager = NotificationManagerCompat.from(context);
+        mnotificationManager.cancel(notification_id);
     }
   }
 
