@@ -13,7 +13,7 @@ import android.os.Build;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.media.AudioAttributes;
-
+import android.app.PendingIntent;
 import java.io.IOException;
 import java.lang.Math;
 import android.media.MediaPlayer;
@@ -61,7 +61,13 @@ public class Notify extends BroadcastReceiver{
          Uri uri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
          //create an unique notification id. Here it is done using random numbers
          int notification_id = (int)(Math.random()*(8000-1+1)+1);
-
+         val sintent=Intent.setClass(context, Salarm);
+         val pendingIntent = PendingIntent.getBroadcast(
+          context,
+          10,
+          sintent,
+          PendingIntent.FLAG_CANCEL_CURRENT
+          );
          NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "NOTIFICATION")
                  .setSmallIcon(R.drawable.ic_launcher)
                  .setContentTitle("Healthy Sleep")
@@ -69,7 +75,7 @@ public class Notify extends BroadcastReceiver{
                  .setTicker("New Notification")
                  .setSound(uri)
                  .setAutoCancel(true)
-                 .setOnlyAlertOnce(false);
+                 .addAction(0, "Stop Alarm", pendingIntent);
 
          NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
          notificationManager.notify(notification_id,builder.build());
@@ -89,5 +95,16 @@ public class Notify extends BroadcastReceiver{
         mMediaPlayer.setLooping(true);
         mMediaPlayer.start();
     }
+
+}
+
+public class Salarm extends BroadcastReceiver{
+  MediaPlayer mediaPlayer;
+  // This function is run when the BroadcastReceiver is fired
+   @Override
+   public void onReceive(Context context, Intent sintent) {
+       super.onDestroy();
+       if (mediaPlayer != null) mediaPlayer.release();
+   }
 
 }
