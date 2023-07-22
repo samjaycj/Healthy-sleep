@@ -13,6 +13,8 @@ import android.os.Build;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.media.AudioAttributes;
+
+import java.io.IOException;
 import java.lang.Math;
 import android.media.MediaPlayer;
 import coffersmart.com.healthysleep.R;
@@ -78,8 +80,12 @@ public class Notify extends BroadcastReceiver{
         MediaPlayer mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setAudioAttributes(new AudioAttributes.Builder()
                              .setUsage(AudioAttributes.USAGE_ALARM).build());
+       try {
         mMediaPlayer.setDataSource(context, alert);
         mMediaPlayer.prepare();
+        } catch (IOException e) {
+        e.printStackTrace();
+      }
         mMediaPlayer.setLooping(true);
         mMediaPlayer.start();
     }
