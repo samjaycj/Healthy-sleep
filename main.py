@@ -324,7 +324,6 @@ class MainApp(MDApp):
             String = autoclass("java.lang.String")
             Int = autoclass("java.lang.Integer")
             AlarmManager = autoclass('android.app.AlarmManager')
-            ClockInfo = autoclass('android.app.AlarmManager.AlarmClockInfo')
             Notify= autoclass('coffersmart.com.healthysleep.Notify')
             intent = Intent()
             intent.setClass(context, Notify)
@@ -334,10 +333,8 @@ class MainApp(MDApp):
             )
             ring_time = faval#time.time_ns() // 1_000_000
             print (ring_time)
-            #cast(AlarmManager, context.getSystemService(Context.ALARM_SERVICE)
-            #).setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, ring_time, pending_intent)
             cast(AlarmManager, context.getSystemService(Context.ALARM_SERVICE)
-            ).setAlarmClock(ClockInfo(ring_time, pending_intent), pending_intent)
+            ).setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, ring_time, pending_intent)
             #self.client.send_message(b'/ping', [alarm_time])
             #self.alarm_event=Clock.schedule_once(self.on_alarm, alarm_time)
 

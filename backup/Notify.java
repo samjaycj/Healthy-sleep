@@ -25,7 +25,6 @@ public class Notify extends BroadcastReceiver{
     this.createNotificationChannel(context);
     // function to create the notification
     this.sendNotification(context, intent);
-    this.triggerAlarm(context);
   }
 
   private void createNotificationChannel(Context context) {
@@ -60,8 +59,8 @@ public class Notify extends BroadcastReceiver{
 
          NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "NOTIFICATION")
                  .setSmallIcon(R.drawable.ic_launcher)
-                 .setContentTitle("Healthy Sleep")
-                 .setContentText("Alarm is Actvated")
+                 .setContentTitle("Your notification title here")
+                 .setContentText("Your notification description here")
                  .setTicker("New Notification")
                  .setSound(uri)
                  .setAutoCancel(true)
@@ -71,26 +70,5 @@ public class Notify extends BroadcastReceiver{
          notificationManager.notify(notification_id,builder.build());
      }
 
-    private void triggerAlarm(Context context) {
-        //this will update the UI with message
-        Reminder inst = Reminder.instance();
-        inst.setAlarmText("Healthy Alarm");
-
-        //this will sound the alarm tone
-        //this will sound the alarm once, if you wish to
-        //raise alarm in loop continuously then use MediaPlayer and setLooping(true)
-        Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        if (alarmUri == null) {
-            alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-        }
-        Ringtone ringtone = RingtoneManager.getRingtone(context, alarmUri);
-        ringtone.play();
-
-        //this will send a notification message
-        ComponentName comp = new ComponentName(context.getPackageName(),
-                AlarmService.class.getName());
-        startWakefulService(context, (intent.setComponent(comp)));
-        setResultCode(Activity.RESULT_OK);
-    }
 
 }
