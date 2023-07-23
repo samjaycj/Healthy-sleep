@@ -399,14 +399,13 @@ class MainApp(MDApp):
             Intent = autoclass("android.content.Intent")
             PendingIntent = autoclass("android.app.PendingIntent")
             Salarm= autoclass('coffersmart.com.healthysleep.Salarm')
-            PythonActivity = autoclass('org.renpy.android.PythonActivity')
             intent = Intent()
             intent.setClass(context, Salarm)
             intent.setAction("org.coffersmart.com.SALARM")
             pending_intent = PendingIntent.getBroadcast(
             context, 10, intent, PendingIntent.FLAG_CANCEL_CURRENT
             )
-            currentActivity = cast('android.app.Activity', PythonActivity.mActivity)
+            currentActivity = cast('android.app.Activity', mActivity)
             currentActivity.startActivity(pending_intent)
 
 
