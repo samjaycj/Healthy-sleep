@@ -40,6 +40,7 @@ class MainApp(MDApp):
     dtf="%Y-%m-%d %H:%M:%S"
     dtfval=[]
     alarmstore = JsonStore('actalarms.json')
+    dialog = None
 
     def build(self):
         #self.settings_cls = SettingsWithSidebar
@@ -138,17 +139,16 @@ class MainApp(MDApp):
         )
 
     def show_alert_dialog(self):
-        self.dialog = MDDialog(
-            text="Stop Alarm...",
-            buttons=[
-                MDRaisedButton(
-                    text="STO Alarm!",
-                    theme_text_color="Custom",
-                    text_color=self.theme_cls.primary_color,
-                    on_release=self.stop_alarm()
-                ),
-            ],
-        )
+        if not self.dialog:
+            self.dialog = MDDialog(
+                text="Stop Alarm...",
+                buttons=[
+                    MDRaisedButton(
+                        text="STO Alarm!",
+                        on_release=self.stop_alarm()
+                    ),
+                ],
+            )
         self.dialog.open()
 
     def disp_alarm_all(self):
@@ -432,7 +432,7 @@ class MainApp(MDApp):
             context, 10, intent, PendingIntent.FLAG_CANCEL_CURRENT
             )
             pending_intent.send(context,0,intent)
-
+            self.dialog.dismiss()
 
 class ContentNavigationDrawer(MDScrollView):
     screen_manager = ObjectProperty()
