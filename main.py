@@ -15,7 +15,7 @@ import time
 from kivy.clock import Clock
 from kivy.core.audio import SoundLoader
 from kivymd.uix.dialog import MDDialog
-from kivymd.uix.button import MDFlatButton
+from kivymd.uix.button import MDRaisedButton
 import os
 from oscpy.client import OSCClient
 from oscpy.server import OSCThreadServer
@@ -137,28 +137,57 @@ class MainApp(MDApp):
             )
         )
 
+    def show_alert_dialog(self):
+        if not self.dialog:
+            self.dialog = MDDialog(
+                text="Stop Alarm...",
+                buttons=[
+                    MDRaisedButton(
+                        text="STO Alarm!",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=self.stop_alarm()
+                    ),
+                ],
+            )
+        self.dialog.open()
+
     def disp_alarm_all(self):
         self.icon_list_a.clear()
         self.listitem_list_a.clear()
         self.root.ids.alarm_list_a.clear_widgets()
         if self.alarmstore.exists('s'):
             sleepalm=self.alarmstore.get('s')['alarm']
-            icons=IconLeftWidgetWithoutTouch(icon="bell")
-            listitem=TwoLineIconListItem(text=str(sleepalm),secondary_text="Sleep Alarm")
-            self.icon_list_a.append(icons)
-            self.listitem_list_a.append(listitem)
-            listitem.add_widget(icons)
-            listitem.bind(on_release=self.delete_active_alarm)
-            self.root.ids.alarm_list_a.add_widget(listitem, index=0)
+            Current_date = datetime.now()
+            dt = datetime.strptime(sleepalm, self.tf)
+            dadded=dt+timedelta(minutes=4)
+            if Current_date>dt: 
+                self.alarmstore.delete('s')
+                if Current_date<dadded: self.show_alert_dialog()
+            else:
+                icons=IconLeftWidgetWithoutTouch(icon="bell")
+                listitem=TwoLineIconListItem(text=str(sleepalm),secondary_text="Sleep Alarm")
+                self.icon_list_a.append(icons)
+                self.listitem_list_a.append(listitem)
+                listitem.add_widget(icons)
+                listitem.bind(on_release=self.delete_active_alarm)
+                self.root.ids.alarm_list_a.add_widget(listitem, index=0)
         if self.alarmstore.exists('w'):
             wakealm=self.alarmstore.get('w')['alarm']
-            icons=IconLeftWidgetWithoutTouch(icon="bell")
-            listitem=TwoLineIconListItem(text=str(wakealm),secondary_text="Wake Alarm")
-            self.icon_list_a.append(icons)
-            self.listitem_list_a.append(listitem)
-            listitem.add_widget(icons)
-            listitem.bind(on_release=self.delete_active_alarm)
-            self.root.ids.alarm_list_a.add_widget(listitem, index=1)
+            Current_date = datetime.now()
+            dt = datetime.strptime(sleepalm, self.tf)
+            dadded=dt+timedelta(minutes=4)
+            if Current_date>dt: 
+                self.alarmstore.delete('w')
+                if Current_date<dadded: self.show_alert_dialog()
+            else:
+                icons=IconLeftWidgetWithoutTouch(icon="bell")
+                listitem=TwoLineIconListItem(text=str(wakealm),secondary_text="Wake Alarm")
+                self.icon_list_a.append(icons)
+                self.listitem_list_a.append(listitem)
+                listitem.add_widget(icons)
+                listitem.bind(on_release=self.delete_active_alarm)
+                self.root.ids.alarm_list_a.add_widget(listitem, index=1)
 
     def delete_active_alarm(self,listdata):
         sindex = self.root.ids.alarm_list_a.children.index(listdata)
@@ -361,7 +390,6 @@ class MainApp(MDApp):
         if sindex!=100: 
             faval=datetime.strptime(aval,self.dtfval[0]).timestamp()*1000
         if platform == "android":
-            self.service = autoclass("coffersmart.com.healthysleep.ServiceHealthysleep")
             mActivity = autoclass("org.kivy.android.PythonActivity").mActivity
             context = mActivity.getApplicationContext()
             Context = autoclass("android.content.Context")
@@ -392,7 +420,6 @@ class MainApp(MDApp):
 
     def stop_alarm(self):
         if platform == "android":
-            self.service = autoclass("coffersmart.com.healthysleep.ServiceHealthysleep")
             mActivity = autoclass("org.kivy.android.PythonActivity").mActivity
             context = mActivity.getApplicationContext()
             Context = autoclass("android.content.Context")
@@ -401,12 +428,11 @@ class MainApp(MDApp):
             Salarm= autoclass('coffersmart.com.healthysleep.Salarm')
             intent = Intent()
             intent.setClass(context, Salarm)
-            intent.setAction("org.coffersmart.com.SALARM")
+            intent.setAction("coffersmart.com.healthysleep.SALARM")
             pending_intent = PendingIntent.getBroadcast(
             context, 10, intent, PendingIntent.FLAG_CANCEL_CURRENT
             )
-            currentActivity = cast('android.app.Activity', mActivity)
-            currentActivity.startActivity(pending_intent)
+            pending_intent.send(context,0,intent)
 
 
 class ContentNavigationDrawer(MDScrollView):
