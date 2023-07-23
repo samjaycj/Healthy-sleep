@@ -138,18 +138,17 @@ class MainApp(MDApp):
         )
 
     def show_alert_dialog(self):
-        if not self.dialog:
-            self.dialog = MDDialog(
-                text="Stop Alarm...",
-                buttons=[
-                    MDRaisedButton(
-                        text="STO Alarm!",
-                        theme_text_color="Custom",
-                        text_color=self.theme_cls.primary_color,
-                        on_release=self.stop_alarm()
-                    ),
-                ],
-            )
+        self.dialog = MDDialog(
+            text="Stop Alarm...",
+            buttons=[
+                MDRaisedButton(
+                    text="STO Alarm!",
+                    theme_text_color="Custom",
+                    text_color=self.theme_cls.primary_color,
+                    on_release=self.stop_alarm()
+                ),
+            ],
+        )
         self.dialog.open()
 
     def disp_alarm_all(self):
