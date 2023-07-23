@@ -159,7 +159,7 @@ class MainApp(MDApp):
         if self.alarmstore.exists('s'):
             sleepalm=self.alarmstore.get('s')['alarm']
             Current_date = datetime.now()
-            dt = datetime.strptime(sleepalm, self.tf)
+            dt = datetime.strptime(sleepalm, self.dtf)
             dadded=dt+timedelta(minutes=4)
             if Current_date>dt: 
                 self.alarmstore.delete('s')
@@ -175,7 +175,7 @@ class MainApp(MDApp):
         if self.alarmstore.exists('w'):
             wakealm=self.alarmstore.get('w')['alarm']
             Current_date = datetime.now()
-            dt = datetime.strptime(sleepalm, self.tf)
+            dt = datetime.strptime(sleepalm, self.dtf)
             dadded=dt+timedelta(minutes=4)
             if Current_date>dt: 
                 self.alarmstore.delete('w')
