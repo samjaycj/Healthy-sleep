@@ -192,7 +192,7 @@ class MainApp(MDApp):
 
     def delete_active_alarm(self,listdata):
         sindex = self.root.ids.alarm_list_a.children.index(listdata)
-        if sindex ==0:
+        if sindex ==1:
             self.onCreate_delete(100,'s','delete')
             self.disp_alarm_all()
             self.root.ids.alarm_list_s.clear_widgets()
@@ -419,7 +419,7 @@ class MainApp(MDApp):
             #self.client.send_message(b'/ping', [alarm_time])
             #self.alarm_event=Clock.schedule_once(self.on_alarm, alarm_time)
 
-    def stop_alarm(self):
+    def stop_alarm(self, obj):
         if platform == "android":
             mActivity = autoclass("org.kivy.android.PythonActivity").mActivity
             context = mActivity.getApplicationContext()
