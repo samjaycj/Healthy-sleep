@@ -4,7 +4,6 @@ package coffersmart.com.healthysleep;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.Context;
-import android.media.MediaPlayer;
 import coffersmart.com.healthysleep.Notify;
 import coffersmart.com.healthysleep.R;
 
