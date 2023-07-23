@@ -144,8 +144,8 @@ class MainApp(MDApp):
                 text="Stop Alarm...",
                 buttons=[
                     MDRaisedButton(
-                        text="STO Alarm!",
-                        on_release=self.stop_alarm()
+                        text="STOP Alarm!",
+                        on_release=self.stop_alarm
                     ),
                 ],
             )
@@ -159,9 +159,10 @@ class MainApp(MDApp):
             sleepalm=self.alarmstore.get('s')['alarm']
             Current_date = datetime.now()
             dt = datetime.strptime(sleepalm, self.dtf)
-            dadded=dt+timedelta(minutes=4)
+            dadded=dt+timedelta(minutes=1)
             if Current_date>dt: 
                 self.alarmstore.delete('s')
+                self.root.ids.alarm_list_s.clear_widgets()
                 if Current_date<dadded: self.show_alert_dialog()
             else:
                 icons=IconLeftWidgetWithoutTouch(icon="bell")
@@ -175,9 +176,10 @@ class MainApp(MDApp):
             wakealm=self.alarmstore.get('w')['alarm']
             Current_wdate = datetime.now()
             wdt = datetime.strptime(wakealm, self.dtf)
-            dwadded=wdt+timedelta(minutes=4)
+            dwadded=wdt+timedelta(minutes=1)
             if Current_wdate>wdt: 
                 self.alarmstore.delete('w')
+                self.root.ids.alarm_list_w.clear_widgets()
                 if Current_wdate<dwadded: self.show_alert_dialog()
             else:
                 icons=IconLeftWidgetWithoutTouch(icon="bell")
@@ -432,7 +434,7 @@ class MainApp(MDApp):
             context, 10, intent, PendingIntent.FLAG_CANCEL_CURRENT
             )
             pending_intent.send(context,0,intent)
-            if self.dialog !=None: self.dialog.dismiss()
+            self.dialog.dismiss()
 
 class ContentNavigationDrawer(MDScrollView):
     screen_manager = ObjectProperty()

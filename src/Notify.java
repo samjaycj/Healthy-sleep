@@ -100,6 +100,7 @@ public class Notify extends BroadcastReceiver{
       if(mMediaPlayer.isPlaying()){
         mMediaPlayer.stop();
         mMediaPlayer.release();
+        mMediaPlayer=null;
         NotificationManagerCompat mnotificationManager = NotificationManagerCompat.from(context);
         mnotificationManager.cancel(notification_id);
       }
