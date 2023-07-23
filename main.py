@@ -21,6 +21,7 @@ from oscpy.client import OSCClient
 from oscpy.server import OSCThreadServer
 from jnius import autoclass, cast
 from kivy import platform
+from kivy.storage.jsonstore import JsonStore
 
 class Content(MDBoxLayout):
     pass
@@ -28,15 +29,18 @@ class Content(MDBoxLayout):
 class MainApp(MDApp):
     icon_list_s = []
     icon_list_w = []
+    icon_list_a=[]
     listitem_list_w=[]
     listitem_list_s=[]
+    listitem_list_a=[]
     timetosleep=0
     alm_time_w={}
     alm_time_s={}
     tf="%H:%M:%S"
     dtf="%Y-%m-%d %H:%M:%S"
     dtfval=[]
-    
+    alarmstore = JsonStore('actalarms.json')
+
     def build(self):
         #self.settings_cls = SettingsWithSidebar
         self.use_kivy_settings = False
@@ -103,7 +107,7 @@ class MainApp(MDApp):
 
     def on_start(self):
 
-        #self.start_service()
+        self.disp_alarm_all()
 
         self.root.ids.box.add_widget(
             MDExpansionPanel(
@@ -133,6 +137,41 @@ class MainApp(MDApp):
             )
         )
 
+    def disp_alarm_all(self):
+        self.icon_list_a.clear()
+        self.listitem_list_a.clear()
+        self.root.ids.alarm_list_a.clear_widgets()
+        if self.alarmstore.exists('s'):
+            sleepalm=self.alarmstore.get('s')['alarm']
+            icons=IconLeftWidgetWithoutTouch(icon="bell")
+            listitem=TwoLineIconListItem(text=str(sleepalm),secondary_text="Sleep Alarm")
+            self.icon_list_a.append(icons)
+            self.listitem_list_a.append(listitem)
+            listitem.add_widget(icons)
+            listitem.bind(on_release=self.delete_active_alarm)
+            self.root.ids.alarm_list_a.add_widget(listitem, index=0)
+        if self.alarmstore.exists('w'):
+            wakealm=self.alarmstore.get('w')['alarm']
+            icons=IconLeftWidgetWithoutTouch(icon="bell")
+            listitem=TwoLineIconListItem(text=str(wakealm),secondary_text="Wake Alarm")
+            self.icon_list_a.append(icons)
+            self.listitem_list_a.append(listitem)
+            listitem.add_widget(icons)
+            listitem.bind(on_release=self.delete_active_alarm)
+            self.root.ids.alarm_list_a.add_widget(listitem, index=1)
+
+    def delete_active_alarm(self,listdata):
+        sindex = self.root.ids.alarm_list_a.children.index(listdata)
+        if sindex ==0:
+            self.onCreate_delete(100,'s','delete')
+            self.disp_alarm_all()
+            self.root.ids.alarm_list_s.clear_widgets()
+            self.root.ids.stime.text=''
+        else:
+            self.onCreate_delete(100,'w','delete')
+            self.disp_alarm_all()
+            self.root.ids.alarm_list_w.clear_widgets()
+            self.root.ids.wtime.text=''
 
     def disp_alarm_sleep(self):
         sdt=self.root.ids.stime.text
@@ -314,13 +353,13 @@ class MainApp(MDApp):
     def onCreate_delete(self,sindex,atype,amethod):
         # initialize alarm time
         if atype=='s':
-            aval=self.alm_time_s[sindex]
+            if sindex!=100: aval=self.alm_time_s[sindex]
             AlarmManagerId=1001
         else:
-            aval=self.alm_time_w[sindex]
+            if sindex!=100: aval=self.alm_time_w[sindex]
             AlarmManagerId=1002
-        faval=datetime.strptime(aval,self.dtfval[0]).timestamp()*1000
-        curr_time=datetime.now()
+        if sindex!=100: 
+            faval=datetime.strptime(aval,self.dtfval[0]).timestamp()*1000
         if platform == "android":
             self.service = autoclass("coffersmart.com.healthysleep.ServiceHealthysleep")
             mActivity = autoclass("org.kivy.android.PythonActivity").mActivity
@@ -343,9 +382,11 @@ class MainApp(MDApp):
                 print (ring_time)
                 am=cast(AlarmManager, context.getSystemService(Context.ALARM_SERVICE)
                 ).setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, ring_time, pending_intent)
+                self.alarmstore.put(atype, alarm=aval, alarmid=AlarmManagerId)
             else:
                 am=context.getSystemService(Context.ALARM_SERVICE)
                 am.cancel(pending_intent)
+                self.alarmstore.delete(atype)
             #self.client.send_message(b'/ping', [alarm_time])
             #self.alarm_event=Clock.schedule_once(self.on_alarm, alarm_time)
 

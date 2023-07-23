@@ -39,7 +39,16 @@
             text: "Healthy Sleep"
             text_color: "#4a4939"
             spacing: "4dp"
-            padding: "12dp", 0, 0, "56dp"
+            padding: "12dp", 0, 0, "20dp"
+        DrawerClickableItem:
+            icon: "home"
+            text: "Home"
+            on_release:
+                root.screen_manager.transition.direction = "left"
+                root.screen_manager.current = "home"
+                root.nav_drawer.set_state("close")
+                app.disp_alarm_all()
+        MDNavigationDrawerDivider:
         MDNavigationDrawerLabel:
             text: "Set Alarms"
         DrawerClickableItem:
@@ -100,6 +109,20 @@ MDScreen:
         #x: toolbar.height
         MDScreenManager:
             id: screen_manager
+            MDScreen:
+                name:"home"
+                BoxLayout:
+                    orientation: 'vertical'
+                    MDLabel:
+                        size_hint: .5, .15
+                        pos_hint: {"center_x": .5}
+                    MDLabel:
+                        text:"Active Alarm List"
+                        size_hint: .5, .08
+                        pos_hint: {"center_x": .5}
+                    MDScrollView:
+                        MDList:
+                            id: alarm_list_a
             MDScreen:
                 name:"wake_alarm"
                 BoxLayout:
