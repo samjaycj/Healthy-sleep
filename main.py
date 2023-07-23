@@ -173,12 +173,12 @@ class MainApp(MDApp):
                 self.root.ids.alarm_list_a.add_widget(listitem, index=0)
         if self.alarmstore.exists('w'):
             wakealm=self.alarmstore.get('w')['alarm']
-            Current_date = datetime.now()
-            dt = datetime.strptime(sleepalm, self.dtf)
-            dadded=dt+timedelta(minutes=4)
-            if Current_date>dt: 
+            Current_wdate = datetime.now()
+            wdt = datetime.strptime(wakealm, self.dtf)
+            dwadded=wdt+timedelta(minutes=4)
+            if Current_wdate>wdt: 
                 self.alarmstore.delete('w')
-                if Current_date<dadded: self.show_alert_dialog()
+                if Current_wdate<dwadded: self.show_alert_dialog()
             else:
                 icons=IconLeftWidgetWithoutTouch(icon="bell")
                 listitem=TwoLineIconListItem(text=str(wakealm),secondary_text="Wake Alarm")
@@ -432,7 +432,7 @@ class MainApp(MDApp):
             context, 10, intent, PendingIntent.FLAG_CANCEL_CURRENT
             )
             pending_intent.send(context,0,intent)
-            self.dialog.dismiss()
+            if self.dialog !=None: self.dialog.dismiss()
 
 class ContentNavigationDrawer(MDScrollView):
     screen_manager = ObjectProperty()
