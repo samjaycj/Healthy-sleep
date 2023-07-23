@@ -390,6 +390,26 @@ class MainApp(MDApp):
             #self.client.send_message(b'/ping', [alarm_time])
             #self.alarm_event=Clock.schedule_once(self.on_alarm, alarm_time)
 
+    def stop_alarm(self):
+        if platform == "android":
+            self.service = autoclass("coffersmart.com.healthysleep.ServiceHealthysleep")
+            mActivity = autoclass("org.kivy.android.PythonActivity").mActivity
+            context = mActivity.getApplicationContext()
+            Context = autoclass("android.content.Context")
+            Intent = autoclass("android.content.Intent")
+            PendingIntent = autoclass("android.app.PendingIntent")
+            Salarm= autoclass('coffersmart.com.healthysleep.Salarm')
+            PythonActivity = autoclass('org.renpy.android.PythonActivity')
+            intent = Intent()
+            intent.setClass(context, Salarm)
+            intent.setAction("org.coffersmart.com.SALARM")
+            pending_intent = PendingIntent.getBroadcast(
+            context, 10, intent, PendingIntent.FLAG_CANCEL_CURRENT
+            )
+            currentActivity = cast('android.app.Activity', PythonActivity.mActivity)
+            currentActivity.startActivity(pending_intent)
+
+
 class ContentNavigationDrawer(MDScrollView):
     screen_manager = ObjectProperty()
     nav_drawer = ObjectProperty()

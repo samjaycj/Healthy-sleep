@@ -123,6 +123,24 @@ MDScreen:
                     MDScrollView:
                         MDList:
                             id: alarm_list_a
+                    MDRaisedButton:
+                        text: "Stop Alarm"
+                        pos_hint: {'x': 0.13}
+                        on_release:
+                            app.stop_alarm()
+                    MDFlatButton:
+                        text: "Create Wake-up Alarm"
+                        pos_hint: {'x': 0.13}
+                        on_release:
+                            screen_manager.current = "wake_alarm"
+                    MDFlatButton:
+                        text: "Create Sleep Alarm"
+                        pos_hint: {'x': 0.13}
+                        on_release:
+                            screen_manager.current = "sleep_alarm"
+                    MDLabel:
+                        size_hint: .5, .15
+                        pos_hint: {"center_x": .5}
             MDScreen:
                 name:"wake_alarm"
                 BoxLayout:
@@ -167,7 +185,7 @@ MDScreen:
                         pos_hint: {"center_x": .5}
                     MDFloatLayout:
                         size_hint: .7, .07
-                        pos_hint: {"center_x": .5, "center_y": .7}
+                        pos_hint: {"center_x": .5}
                         MDTextField:
                             id: wtime
                             readonly: True
@@ -178,7 +196,7 @@ MDScreen:
                         MDIconButton:
                             icon: "clock"
                             pos_hint: {"center_y": .43}
-                            pos: wtime.x + stime.width - self.width + dp(8), 0
+                            pos: wtime.x + wtime.width - self.width + dp(8), 0
                             on_release:
                                 app.show_time_picker_s()
                     MDScrollView:
