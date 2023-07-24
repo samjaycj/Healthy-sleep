@@ -165,6 +165,9 @@ class MainApp(MDApp):
                 self.root.ids.alarm_list_s.clear_widgets()
                 if Current_date<dadded: self.show_alert_dialog()
             else:
+                time_remain=dt-Current_date
+                alarm_time=time_remain.total_seconds()
+                self.alarm_event=Clock.schedule_once(self.show_alert_dialog, alarm_time)
                 icons=IconLeftWidgetWithoutTouch(icon="bell")
                 listitem=TwoLineIconListItem(text=str(sleepalm),secondary_text="Sleep Alarm")
                 self.icon_list_a.append(icons)
@@ -182,6 +185,9 @@ class MainApp(MDApp):
                 self.root.ids.alarm_list_w.clear_widgets()
                 if Current_wdate<dwadded: self.show_alert_dialog()
             else:
+                wtime_remain=wdt-Current_wdate
+                walarm_time=wtime_remain.total_seconds()
+                self.walarm_event=Clock.schedule_once(self.show_alert_dialog, walarm_time)                
                 icons=IconLeftWidgetWithoutTouch(icon="bell")
                 listitem=TwoLineIconListItem(text=str(wakealm),secondary_text="Wake Alarm")
                 self.icon_list_a.append(icons)
@@ -231,7 +237,7 @@ class MainApp(MDApp):
                 listitem.add_widget(icons)
                 listitem.bind(on_release=self.change_icon)
                 self.root.ids.alarm_list_w.add_widget(listitem, index=i)
-
+            self.disp_alarm_all()
 
     def change_icon(self,listdata):
         sindex = self.root.ids.alarm_list_w.children.index(listdata)
@@ -288,6 +294,7 @@ class MainApp(MDApp):
                 listitem.add_widget(icons)
                 listitem.bind(on_release=self.change_icon2)
                 self.root.ids.alarm_list_s.add_widget(listitem, index=i)
+            self.disp_alarm_all()
 
 
     def change_icon2(self,listdata):
