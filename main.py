@@ -138,7 +138,7 @@ class MainApp(MDApp):
             )
         )
 
-    def show_alert_dialog(self):
+    def show_alert_dialog(self, *args):
         if not self.dialog:
             self.dialog = MDDialog(
                 text="Stop Alarm...",
@@ -156,6 +156,7 @@ class MainApp(MDApp):
         self.listitem_list_a.clear()
         self.root.ids.alarm_list_a.clear_widgets()
         if self.alarmstore.exists('s'):
+            print("inside sleep")
             sleepalm=self.alarmstore.get('s')['alarm']
             Current_date = datetime.now()
             dt = datetime.strptime(sleepalm, self.dtf)
@@ -176,6 +177,7 @@ class MainApp(MDApp):
                 listitem.bind(on_release=self.delete_active_alarm)
                 self.root.ids.alarm_list_a.add_widget(listitem, index=0)
         if self.alarmstore.exists('w'):
+            print("inside wake")
             wakealm=self.alarmstore.get('w')['alarm']
             Current_wdate = datetime.now()
             wdt = datetime.strptime(wakealm, self.dtf)
@@ -237,7 +239,6 @@ class MainApp(MDApp):
                 listitem.add_widget(icons)
                 listitem.bind(on_release=self.change_icon)
                 self.root.ids.alarm_list_w.add_widget(listitem, index=i)
-            self.disp_alarm_all()
 
     def change_icon(self,listdata):
         sindex = self.root.ids.alarm_list_w.children.index(listdata)
@@ -294,8 +295,6 @@ class MainApp(MDApp):
                 listitem.add_widget(icons)
                 listitem.bind(on_release=self.change_icon2)
                 self.root.ids.alarm_list_s.add_widget(listitem, index=i)
-            self.disp_alarm_all()
-
 
     def change_icon2(self,listdata):
         sindex = self.root.ids.alarm_list_s.children.index(listdata)
@@ -419,10 +418,12 @@ class MainApp(MDApp):
                 am=cast(AlarmManager, context.getSystemService(Context.ALARM_SERVICE)
                 ).setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, ring_time, pending_intent)
                 self.alarmstore.put(atype, alarm=aval, alarmid=AlarmManagerId)
+                self.disp_alarm_all()
             else:
                 am=context.getSystemService(Context.ALARM_SERVICE)
                 am.cancel(pending_intent)
                 self.alarmstore.delete(atype)
+                self.disp_alarm_all()
             #self.client.send_message(b'/ping', [alarm_time])
             #self.alarm_event=Clock.schedule_once(self.on_alarm, alarm_time)
 
