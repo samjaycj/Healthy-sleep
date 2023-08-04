@@ -108,8 +108,10 @@ class MainApp(MDApp):
 
     def on_start(self):
 
+        #self.alarmstore.put('s', alarm='2023-08-04 06:10 PM', aid=1000)
+        #self.alarmstore.put('w', alarm='2023-08-04 06:23 PM', aid=1001)
         self.disp_alarm_all()
-
+        
         self.root.ids.box.add_widget(
             MDExpansionPanel(
                 icon="emoticon-happy-outline",
@@ -156,7 +158,6 @@ class MainApp(MDApp):
         self.listitem_list_a.clear()
         self.root.ids.alarm_list_a.clear_widgets()
         if self.alarmstore.exists('s'):
-            print("inside sleep")
             sleepalm=self.alarmstore.get('s')['alarm']
             Current_date = datetime.now()
             dt = datetime.strptime(sleepalm, self.dtf)
@@ -177,7 +178,6 @@ class MainApp(MDApp):
                 listitem.bind(on_release=self.delete_active_alarm)
                 self.root.ids.alarm_list_a.add_widget(listitem)
         if self.alarmstore.exists('w'):
-            print("inside wake")
             wakealm=self.alarmstore.get('w')['alarm']
             Current_wdate = datetime.now()
             wdt = datetime.strptime(wakealm, self.dtf)
@@ -200,7 +200,7 @@ class MainApp(MDApp):
 
     def delete_active_alarm(self,listdata):
         sindex = self.root.ids.alarm_list_a.children.index(listdata)
-        if self.listitem_list_a[sindex].secondary_text == "Sleep Alarm":
+        if self.listitem_list_a[sindex].secondary_text == "Wake Alarm":
             self.onCreate_delete(100,'s','delete')
             self.disp_alarm_all()
             self.root.ids.alarm_list_s.clear_widgets()
