@@ -175,7 +175,7 @@ class MainApp(MDApp):
                 self.listitem_list_a.append(listitem)
                 listitem.add_widget(icons)
                 listitem.bind(on_release=self.delete_active_alarm)
-                self.root.ids.alarm_list_a.add_widget(listitem, index=0)
+                self.root.ids.alarm_list_a.add_widget(listitem)
         if self.alarmstore.exists('w'):
             print("inside wake")
             wakealm=self.alarmstore.get('w')['alarm']
@@ -196,11 +196,11 @@ class MainApp(MDApp):
                 self.listitem_list_a.append(listitem)
                 listitem.add_widget(icons)
                 listitem.bind(on_release=self.delete_active_alarm)
-                self.root.ids.alarm_list_a.add_widget(listitem, index=1)
+                self.root.ids.alarm_list_a.add_widget(listitem)
 
     def delete_active_alarm(self,listdata):
         sindex = self.root.ids.alarm_list_a.children.index(listdata)
-        if sindex ==1:
+        if self.listitem_list_a[sindex].secondary_text == "Sleep Alarm":
             self.onCreate_delete(100,'s','delete')
             self.disp_alarm_all()
             self.root.ids.alarm_list_s.clear_widgets()
