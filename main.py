@@ -99,17 +99,37 @@ class MainApp(MDApp):
                          key, value):
         self.timetosleep = int(self.config.get('HealthySleep', 'timetosleep'))
         timeformat=self.config.get('HealthySleep', 'timeformat')
+        if self.alarmstore.exists('s'):
+            salm=self.alarmstore.get('s')
+            dt = datetime.strptime(salm['alarm'], self.dtf)
+            if timeformat=='24H':
+                newdtf="%Y-%m-%d %H:%M:%S"
+            else:
+                newdtf="%Y-%m-%d %I:%M %p"
+            newdt=dt.strftime(newdtf)
+            self.alarmstore.put('s',alarm=newdt,alarmid=salm['alarmid'])
+        if self.alarmstore.exists('w'):
+            salm=self.alarmstore.get('w')
+            dt = datetime.strptime(salm['alarm'], self.dtf)
+            if timeformat=='24H':
+                newdtf="%Y-%m-%d %H:%M:%S"
+            else:
+                newdtf="%Y-%m-%d %I:%M %p"
+            newdt=dt.strftime(newdtf)
+            self.alarmstore.put('w',alarm=newdt,alarmid=salm['alarmid'])
         if timeformat=='24H': 
             self.tf="%H:%M:%S"
             self.dtf="%Y-%m-%d %H:%M:%S"
         else:
             self.tf="%I:%M %p"
             self.dtf="%Y-%m-%d %I:%M %p"
+        self.disp_alarm_all()
+
 
     def on_start(self):
 
-        self.alarmstore.put('s', alarm='2023-08-05 06:10 PM', aid=1000)
-        self.alarmstore.put('w', alarm='2023-08-05 06:23 PM', aid=1001)
+        #self.alarmstore.put('s', alarm='2023-08-05 06:10 PM', alarmid=1000)
+        #self.alarmstore.put('w', alarm='2023-08-05 06:23 PM', alarmid=1001)
         self.disp_alarm_all()
         
         self.root.ids.box.add_widget(
