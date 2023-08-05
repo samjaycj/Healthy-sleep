@@ -108,8 +108,8 @@ class MainApp(MDApp):
 
     def on_start(self):
 
-        #self.alarmstore.put('s', alarm='2023-08-04 06:10 PM', aid=1000)
-        #self.alarmstore.put('w', alarm='2023-08-04 06:23 PM', aid=1001)
+        self.alarmstore.put('s', alarm='2023-08-05 06:10 PM', aid=1000)
+        self.alarmstore.put('w', alarm='2023-08-05 06:23 PM', aid=1001)
         self.disp_alarm_all()
         
         self.root.ids.box.add_widget(
@@ -199,8 +199,9 @@ class MainApp(MDApp):
                 self.root.ids.alarm_list_a.add_widget(listitem)
 
     def delete_active_alarm(self,listdata):
-        sindex = self.root.ids.alarm_list_a.children.index(listdata)
-        if self.listitem_list_a[sindex].secondary_text == "Wake Alarm":
+        sizelist=len(self.root.ids.alarm_list_a.children)
+        sindex = sizelist-1-self.root.ids.alarm_list_a.children.index(listdata)
+        if self.listitem_list_a[sindex].secondary_text == "Sleep Alarm":
             self.onCreate_delete(100,'s','delete')
             self.disp_alarm_all()
             self.root.ids.alarm_list_s.clear_widgets()
