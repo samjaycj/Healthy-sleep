@@ -39,7 +39,7 @@
             text: "Healthy Sleep"
             text_color: "#4a4939"
             spacing: "4dp"
-            padding: "25dp", 0, 0, "30dp"
+            padding: "12dp", "25dp", 0, "25dp"
         DrawerClickableItem:
             icon: "home"
             text: "Home"
@@ -196,53 +196,6 @@ MDScreen:
                     MDScrollView:
                         MDList:
                             id: alarm_list_s
-            MDScreen:
-                name:"settings"
-                BoxLayout:
-                    orientation: 'vertical'
-                    MDLabel:
-                        size_hint: .5, .2
-                        pos_hint: {"center_x": .5}
-                    MDLabel:
-                        text:"Settings"
-                        halign: "center"
-                        size_hint: 1, .12                        
-                        pos_hint: {"center_x": .5}
-                    MDFloatLayout:
-                        size_hint: .7, .17
-                        pos_hint: {"center_x": .5, "center_y": .7}
-                        MDTextField:
-                            id: ftime
-                            readonly: True
-                            text: "24H"
-                            hint_text: "Time Format"
-                            pos_hint: {'center_x': 0.43, 'center_y': 0.43}
-                            font_size: '12sp'
-                            cursor_width: '2sp'                                            
-                        MDIconButton:
-                            id: ftimedrop
-                            icon: "arrow-down-drop-circle-outline"
-                            pos_hint: {"center_y": .43}
-                            pos: ftime.x + ftime.width - self.width + dp(8), 0
-                            on_release:
-                                app.pick_time_format()
-                    MDFloatLayout:
-                        size_hint: .7, .17
-                        pos_hint: {"center_x": .5, "center_y": .6}
-                        MDTextField:
-                            id: fstime
-                            text: "15"
-                            hint_text: "Time to fall asleep (Minutes)"
-                            pos_hint: {'center_x': 0.43, 'center_y': 0.43}
-                            font_size: '12sp'
-                            cursor_width: '2sp'  
-                            input_filter: 'int'       
-                            max_text_length: 2
-                    MDFloatLayout:
-                        pos_hint: {"center_x": .5, "center_y": .6}
-                        MDRectangleFlatIconButton:
-                            text: "Save"
-                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}                                    
             MDScreen:
                 name:"info"
                 BoxLayout:

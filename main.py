@@ -1,24 +1,16 @@
 from kivymd.app import MDApp
-from kivy.core.window import Window
 from kivy.lang import Builder
 from kivymd.uix.list import TwoLineIconListItem, IconLeftWidgetWithoutTouch, IconRightWidget, TwoLineAvatarIconListItem
 from kivymd.uix.pickers import MDTimePicker
 from datetime import datetime,timedelta
 from kivy.properties import ObjectProperty
 from kivymd.uix.scrollview import MDScrollView
-from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.expansionpanel import MDExpansionPanel, MDExpansionPanelOneLine
-from kivy.uix.settings import SettingsWithSidebar
 from jsonsettings import settings_json
-import time
 from kivy.clock import Clock
-from kivy.core.audio import SoundLoader
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDRaisedButton
-import os
-from oscpy.client import OSCClient
-from oscpy.server import OSCThreadServer
 from jnius import autoclass, cast
 from kivy import platform
 from kivy.storage.jsonstore import JsonStore
@@ -51,36 +43,12 @@ class MainApp(MDApp):
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "DeepOrange"
 
-        self.service = None
-        self.server = server = OSCThreadServer()
-        server.listen(
-            address=b'localhost',
-            port=3002,
-            default=True,
-        )
-
-        server.bind(b'/message', self.display_message)
-        #server.bind(b'/date', self.date)
-        self.client = OSCClient(b'localhost', 3000)
-
         if timeformat=='24H': 
             self.tf="%H:%M:%S"
             self.dtf="%Y-%m-%d %H:%M:%S"
         else:
             self.tf="%I:%M %p"
             self.dtf="%Y-%m-%d %I:%M %p"
-
-    def send(self, *args):
-        self.client.send_message(b'/ping', [])
-
-    def display_message(self, message):
-        if self.root:
-            self.root.ids.labeltest.text += '{}\n'.format(message.decode('utf8'))
-
-    def date(self, message):
-        if self.root:
-            self.root.ids.date.text = message.decode('utf8')
-
 
     def ret_dtf(self):
         self.dtfval.insert(0,self.dtf)
@@ -128,9 +96,6 @@ class MainApp(MDApp):
 
 
     def on_start(self):
-
-        #self.alarmstore.put('s', alarm='2023-08-05 06:10 PM', alarmid=1000)
-        #self.alarmstore.put('w', alarm='2023-08-05 06:23 PM', alarmid=1001)
         self.disp_alarm_all()
         
         self.root.ids.box.add_widget(
@@ -346,34 +311,9 @@ class MainApp(MDApp):
         time_dialog.bind(on_save=self.get_time_s)
         time_dialog.open()
 
-       
     def get_time_s(self, instance, time):            
         self.root.ids.wtime.text=time.strftime(self.tf)
         self.disp_alarm_wake()
-
-    def pick_time_format(self):
-        self.menu_list = [
-            {
-                "viewclass": "OneLineListItem",
-                "text": "24H",
-                "on_release": lambda x="24H": self.drop_option(x)
-            },
-            {
-                "viewclass": "OneLineListItem",
-                "text": "12H",
-                "on_release": lambda x="12H": self.drop_option(x)
-            }
-        ]
-        self.dropdown=MDDropdownMenu(
-            caller=self.root.ids.ftimedrop,
-            items = self.menu_list,
-            width_mult=4
-        )
-        self.dropdown.open()
-
-    def drop_option(self, option_text):
-        self.root.ids.ftime.text=option_text
-        self.dropdown.dismiss()
 
     def send_mail(self):
         import smtplib, ssl
@@ -391,29 +331,7 @@ class MainApp(MDApp):
         with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
             server.login(sender_email, password)
             server.sendmail(sender_email, receiver_email, message)
-    
-    def start_service(self):
-        if platform == "android":
-            self.service = autoclass("coffersmart.com.healthysleep.ServiceHealthysleep")
-            self.mActivity = autoclass("org.kivy.android.PythonActivity").mActivity
-           # self.service.start(self.mActivity, "")
-            #return self.service
-
-        elif platform in ('linux', 'linux2', 'macos', 'win'):
-            from runpy import run_path
-            from threading import Thread
-            self.service = Thread(
-                target=run_path,
-                args=['service.py'],
-                kwargs={'run_name': '__main__'},
-                daemon=True
-            )
-            self.service.start()
-        else:
-            raise NotImplementedError(
-                "service start not implemented on this platform"
-            )
-        
+           
     def onCreate_delete(self,sindex,atype,amethod):
         # initialize alarm time
         if atype=='s':
