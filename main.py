@@ -223,7 +223,7 @@ class MainApp(MDApp):
             self.alm_time_w.clear()
             self.ret_dtf()
             for i in range(7):
-                stime=dt_calc+timedelta(minutes=1.5*(i+1))
+                stime=dt_calc+timedelta(minutes=90*(i+1))
                 strstime=stime.strftime(self.dtf)
                 icons=IconLeftWidgetWithoutTouch(icon="bell-outline")
                 listitem=TwoLineIconListItem(text=str(strstime),secondary_text="Cycle "+str(i+1)+" Alarm")
@@ -279,7 +279,7 @@ class MainApp(MDApp):
             self.alm_time_s.clear()
             self.ret_dtf()
             for i in range(7):
-                stime=dt_calc-timedelta(minutes=1.5*(i+1))
+                stime=dt_calc-timedelta(minutes=90*(i+1))
                 strstime=stime.strftime(self.dtf)
                 icons=IconLeftWidgetWithoutTouch(icon="bell-outline")
                 listitem=TwoLineIconListItem(text=str(strstime),secondary_text="Cycle "+str(i+1)+" Alarm")
