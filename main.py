@@ -1,7 +1,7 @@
 from kivymd.app import MDApp
 from kivy.core.window import Window
 from kivy.lang import Builder
-from kivymd.uix.list import TwoLineIconListItem, IconLeftWidgetWithoutTouch
+from kivymd.uix.list import TwoLineIconListItem, IconLeftWidgetWithoutTouch, IconRightWidget, TwoLineAvatarIconListItem
 from kivymd.uix.pickers import MDTimePicker
 from datetime import datetime,timedelta
 from kivy.properties import ObjectProperty
@@ -30,6 +30,7 @@ class MainApp(MDApp):
     icon_list_s = []
     icon_list_w = []
     icon_list_a=[]
+    iconright_list_a=[]
     listitem_list_w=[]
     listitem_list_s=[]
     listitem_list_a=[]
@@ -175,6 +176,7 @@ class MainApp(MDApp):
 
     def disp_alarm_all(self):
         self.icon_list_a.clear()
+        self.iconright_list_a.clear()
         self.listitem_list_a.clear()
         self.root.ids.alarm_list_a.clear_widgets()
         if self.alarmstore.exists('s'):
@@ -191,11 +193,14 @@ class MainApp(MDApp):
                 alarm_time=time_remain.total_seconds()
                 self.alarm_event=Clock.schedule_once(self.show_alert_dialog, alarm_time)
                 icons=IconLeftWidgetWithoutTouch(icon="bell")
-                listitem=TwoLineIconListItem(text=str(sleepalm),secondary_text="Sleep Alarm")
+                iconright= IconRightWidget(icon="minus",id="sa")       
+                listitem=TwoLineAvatarIconListItem(text=str(sleepalm),secondary_text="Sleep Alarm")
                 self.icon_list_a.append(icons)
+                self.iconright_list_a.append(iconright)
                 self.listitem_list_a.append(listitem)
                 listitem.add_widget(icons)
-                listitem.bind(on_release=self.delete_active_alarm)
+                listitem.add_widget(iconright)
+                iconright.bind(on_release=self.delete_active_alarm)
                 self.root.ids.alarm_list_a.add_widget(listitem)
         if self.alarmstore.exists('w'):
             wakealm=self.alarmstore.get('w')['alarm']
@@ -211,17 +216,19 @@ class MainApp(MDApp):
                 walarm_time=wtime_remain.total_seconds()
                 self.walarm_event=Clock.schedule_once(self.show_alert_dialog, walarm_time)                
                 icons=IconLeftWidgetWithoutTouch(icon="bell")
-                listitem=TwoLineIconListItem(text=str(wakealm),secondary_text="Wake Alarm")
+                iconright= IconRightWidget(icon="minus",id="wa") 
+                listitem=TwoLineAvatarIconListItem(text=str(wakealm),secondary_text="Wake Alarm")
                 self.icon_list_a.append(icons)
+                self.iconright_list_a.append(iconright)
                 self.listitem_list_a.append(listitem)
                 listitem.add_widget(icons)
-                listitem.bind(on_release=self.delete_active_alarm)
+                listitem.add_widget(iconright)
+                iconright.bind(on_release=self.delete_active_alarm) 
                 self.root.ids.alarm_list_a.add_widget(listitem)
 
-    def delete_active_alarm(self,listdata):
-        sizelist=len(self.root.ids.alarm_list_a.children)
-        sindex = sizelist-1-self.root.ids.alarm_list_a.children.index(listdata)
-        if self.listitem_list_a[sindex].secondary_text == "Sleep Alarm":
+    def delete_active_alarm(self,icondata):
+        sindex = icondata.id
+        if sindex=="sa":
             self.onCreate_delete(100,'s','delete')
             self.disp_alarm_all()
             self.root.ids.alarm_list_s.clear_widgets()
